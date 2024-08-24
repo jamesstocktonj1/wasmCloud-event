@@ -1,0 +1,32 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: event-driven
+  annotations:
+    description: 'Event driven application'
+spec:
+  components:
+    - name: ingest
+      type: component
+      properties:
+        image: file://./ingest/build/event_driver_ingest_s.wasm
+      traits:
+        - type: spreadscaler
+          properties:
+            instances: 1
+
+    - name: ingest-http
+      type: capability
+      properties:
+        image: ghcr.io/wasmcloud/http-server:0.22.0
+      traits:
+        - type: link
+          properties:
+            target: ingest
+            namespace: wasi
+            package: http
+            interfaces: [incoming-handler]
+            source_config:
+              - name: default-http
+                properties:
+                  address: 0.0.0.0:8080
