@@ -22,6 +22,7 @@ jobs:
     name: build wash-cli
     runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false
       matrix:
         component:
           - ingest
@@ -44,4 +45,4 @@ jobs:
           WASH_REG_USER: ${{ github.actor }}
           WASH_REG_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          wash push ghcr.io/jamesstocktonj1/${{ github.repository }}/component-${{ matrix.component }}:${{ steps.meta.outputs.tags || 'main' }} ${{ matrix.component }}/build/event_driven_${{ matrix.component }}_s.wasm
+          wash push ghcr.io/${{ github.repository }}/component-${{ matrix.component }}:${{ steps.meta.outputs.tags || 'main' }} ${{ matrix.component }}/build/event_driven_${{ matrix.component }}_s.wasm
