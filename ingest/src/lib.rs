@@ -48,7 +48,7 @@ impl Guest for HttpServer {
             .expect("failed to serialize message");
 
         let msg = types::BrokerMessage{
-            subject: "http".to_string(),
+            subject: "eventdriven.http".to_string(),
             reply_to: None,
             body: msg_data,
         };

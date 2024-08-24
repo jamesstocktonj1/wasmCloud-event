@@ -1,5 +1,5 @@
 [package]
-name = "event-driven_ingest"
+name = "event-driven_validator"
 edition = "2021"
 version = "0.1.0"
 
@@ -9,7 +9,4 @@ version = "0.1.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-anyhow = "1"
-chrono = "0.4.38"
-serde_json = "1"
 wit-bindgen = "0.30"
