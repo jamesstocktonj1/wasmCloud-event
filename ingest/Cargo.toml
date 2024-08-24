@@ -1,5 +1,5 @@
 [package]
-name = "event-driver_ingest"
+name = "event-driven_ingest"
 edition = "2021"
 version = "0.1.0"
 

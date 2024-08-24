@@ -9,11 +9,11 @@ spec:
     - name: ingest
       type: component
       properties:
-        image: file://./ingest/build/event_driver_ingest_s.wasm
+        image: file://./ingest/build/event_driven_ingest_s.wasm
       traits:
         - type: spreadscaler
           properties:
-            instances: 1
+            instances: 10
         - type: link
           properties:
             target: nats
@@ -37,7 +37,33 @@ spec:
                 properties:
                   address: 0.0.0.0:8080
 
+    - name: validator
+      type: component
+      properties:
+        image: file://./validator/build/event_driven_validator_s.wasm
+      traits:
+        - type: spreadscaler
+          properties:
+            instances: 10
+        - type: link
+          properties:
+            target: nats
+            namespace: wasmcloud
+            package: messaging
+            interfaces: [consumer]
+
     - name: nats
       type: capability
       properties:
         image: ghcr.io/wasmcloud/messaging-nats:0.22.0
+      traits:
+        - type: link
+          properties:
+            target: validator
+            namespace: wasmcloud
+            package: messaging
+            interfaces: [handler]
+            source_config:
+              - name: ingest-validator
+                properties:
+                  subscriptions: eventdriven.http

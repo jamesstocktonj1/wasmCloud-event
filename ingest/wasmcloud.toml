@@ -1,4 +1,4 @@
-name = "event-driver/ingest"
+name = "event-driven/ingest"
 version = "0.1.0"
 language = "rust"
 type = "component"
