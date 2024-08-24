@@ -1,0 +1,46 @@
+name: component-build
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ingest/*
+      - validator/*
+  workflow_dispatch:
+  
+permissions:
+  contents: read
+
+jobs:
+  build-components:
+    name: build wash-cli
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        component:
+          - ingest
+          - validator
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Setup wash-cli
+        uses: wasmCloud/common-actions/install-wash@main
+      - name: Build Component
+        run: wash build -p ${{ matrix.component }}
+      - name: Publish Component
+        env:
+          WASH_REG_USER: ${{ github.actor }}
+          WASH_REG_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          wash push ghcr.io/jamesstocktonj1/${{ env.REGISTRY }}/component-${{ matrix.component }}:${{ steps.meta.outputs.tags }} ${{ matrix.component }}/build/event_driven_${{ matrix.component }}_s.wasm
+          wash push ghcr.io/jamesstocktonj1/${{ env.REGISTRY }}/component-${{ matrix.component }}:latest
