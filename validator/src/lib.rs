@@ -1,5 +1,7 @@
 wit_bindgen::generate!({ generate_all });
 
+use std::thread;
+
 use exports::wasmcloud::messaging::handler::Guest;
 use wasi::logging::logging::*;
 use wasmcloud::messaging::*;
@@ -13,6 +15,9 @@ impl Guest for Validator {
             reply_to: None,
             body: "Event received: TODO validate".as_bytes().to_vec(),
         };
+
+        thread::sleep(std::time::Duration::from_secs(1));
+
         consumer::publish(&msg);
         log(Level::Info, "", "Received message");
         Ok(())
