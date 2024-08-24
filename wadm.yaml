@@ -14,6 +14,12 @@ spec:
         - type: spreadscaler
           properties:
             instances: 1
+        - type: link
+          properties:
+            target: nats
+            namespace: wasmcloud
+            package: messaging
+            interfaces: [consumer]
 
     - name: ingest-http
       type: capability
@@ -30,3 +36,8 @@ spec:
               - name: default-http
                 properties:
                   address: 0.0.0.0:8080
+
+    - name: nats
+      type: capability
+      properties:
+        image: ghcr.io/wasmcloud/messaging-nats:0.22.0
